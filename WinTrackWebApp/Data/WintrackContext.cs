@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WinTrackWebApp.Models;
 
 namespace WinTrackWebApp.Data
 {
@@ -12,5 +13,7 @@ namespace WinTrackWebApp.Data
             : base(options)
         {
         }
+
+        public DbSet<Arduino> Arduino { get; set; }
     }
 }

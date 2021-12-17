@@ -1,9 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    string datetime = DateTime.Now.ToString();
 }
+<label class="switch">
+    <input id="demoToggle" type="checkbox">
+    <span class="slider round"></span>
+</label>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome - @datetime</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Scripts{ 
+<script>
+    $(document).ready(() => {
+        $("#demoToggle").change(function () {
+            $.ajax({
+                url: `localhost:44334/home/switchdata`,
+                type: "POST"
+            }).then(() => {
+                $.ajax({
+                    url: `localhost:44334/home/getstatus`,
+                    type: "GET"
+                }).then(result => {
+                    $("#demoToggle").prop("checked", result);
+                });
+            });
+        });
+    });
+</script>
+}   
