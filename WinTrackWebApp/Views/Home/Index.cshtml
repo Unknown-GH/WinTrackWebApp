@@ -1,27 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    bool demoData =  (bool) ViewData["DemoData"];
 }
 <label class="switch">
-    <input id="demoToggle" type="checkbox">
+    <input id="demoToggle" type="checkbox" @if (demoData) {@Html.Raw("checked")}>
     <span class="slider round"></span>
 </label>
 
 @section Scripts{ 
 <script>
-    $(document).ready(() => {
-        $("#demoToggle").change(function () {
-            $.ajax({
-                url: `localhost:44334/home/switchdata`,
-                type: "POST"
-            }).then(() => {
-                $.ajax({
-                    url: `localhost:44334/home/getstatus`,
-                    type: "GET"
-                }).then(result => {
-                    $("#demoToggle").prop("checked", result);
-                });
-            });
+    const SwitchData = () => {
+        $("#demoToggle").prop("disabled", true);
+        $.ajax({
+            url: `https://localhost:44334/home/switchdata`,
+            type: "POST"
+        }).then(() => {
+            setTimeout(() => { $("#demoToggle").prop("disabled", false); }, 1500);
         });
+    }
+    $(document).ready(() => {
+        $("#demoToggle").on("click", SwitchData);
     });
 </script>
 }   
