@@ -38,7 +38,7 @@ namespace WinTrackWebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WintrackContext wintrackContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WintrackContext wintrackContext, UserManager<IdentityUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -56,7 +56,7 @@ namespace WinTrackWebApp
 
             app.UseRouting();
 
-            SeedData.Init(wintrackContext);
+            SeedData.Init(wintrackContext, userManager);
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -65,7 +65,7 @@ namespace WinTrackWebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Login}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
