@@ -39,6 +39,7 @@ namespace WinTrackWebApp.Controllers
         public IActionResult Index()
         {
             ViewData["DemoData"] = Arduino.DemoData;
+            ViewData["ServerUrl"] = Startup.ServerUrl;
             return View();
         }
 

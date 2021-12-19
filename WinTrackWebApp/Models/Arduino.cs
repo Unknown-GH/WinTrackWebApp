@@ -19,7 +19,7 @@ namespace WinTrackWebApp.Models
         {
             if (_client == null || !_client.IsConnected) { 
                 AuthenticationMethod method = new PasswordAuthenticationMethod("a3sec", "A3secwintrack6");
-                ConnectionInfo connection = new ConnectionInfo("10.0.1.2", "a3sec", method);
+                ConnectionInfo connection = new ConnectionInfo("10.0.1.2", "a3sec", method); //TODO: FIX LATER
                 _client = new SshClient(connection);
 
                 try

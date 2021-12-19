@@ -18,6 +18,8 @@ namespace WinTrackWebApp
 {
     public class Startup
     {
+        public static string ServerUrl;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,11 +44,13 @@ namespace WinTrackWebApp
         {
             if (env.IsDevelopment())
             {
+                ServerUrl = "https://localhost:44334";
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
             else
             {
+                ServerUrl = $"https://192.168.2.21";
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();

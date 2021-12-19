@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     bool demoData =  (bool) ViewData["DemoData"];
+    string serverUrl = (string) ViewData["ServerUrl"];
 }
 <label class="switch">
     <input id="demoToggle" type="checkbox" @if (demoData) {@Html.Raw("checked")}>
@@ -12,7 +13,7 @@
     const SwitchData = () => {
         $("#demoToggle").prop("disabled", true);
         $.ajax({
-            url: `https://localhost:44334/home/switchdata`,
+            url: `@serverUrl/home/switchdata`,
             type: "POST"
         }).then(() => {
             setTimeout(() => { $("#demoToggle").prop("disabled", false); }, 1500);
