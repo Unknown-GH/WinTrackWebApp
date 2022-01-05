@@ -12,14 +12,16 @@ namespace WinTrackWebApp.Models
         [Key]
         public int Key { get; set; } = 1;
         public bool DemoData { get; set; } = false;
-        public bool DemoSwitch { get; set; } = false;
+        public bool Track { get; set; } = false;
         private static SshClient _client;
 
-        public static bool GetConnection()
+        public bool GetConnection()
         {
+            if (DemoData) return true;
             if (_client == null || !_client.IsConnected) { 
                 AuthenticationMethod method = new PasswordAuthenticationMethod("a3sec", "A3secwintrack6");
                 ConnectionInfo connection = new ConnectionInfo("10.0.1.2", "a3sec", method); //TODO: FIX LATER
+                connection.Timeout = TimeSpan.FromSeconds(1);
                 _client = new SshClient(connection);
 
                 try
@@ -30,61 +32,37 @@ namespace WinTrackWebApp.Models
                 {
                     return false;
                 }
+                catch (Renci.SshNet.Common.SshOperationTimeoutException)
+                {
+                    return false;
+                }
+                Track = GetTrackStatus();
             }
             return true;
         }
 
         public void SwitchTrack()
         {
-            if (DemoData) DemoSwitch = !DemoSwitch;
+            if (DemoData) Track = !Track;
             else
             {
                 if (GetConnection())
                 {
                     _client.RunCommand("echo 2 >/dev/ttyACM0");
+                    Track = !Track;
                 }
             }
         }
 
-        public bool GetStatus()
+        public bool GetTrackStatus()
         {
-            if (DemoData) return DemoSwitch;
+            if (DemoData) return Track;
             if (GetConnection())
             {
                 var output = _client.RunCommand("echo 3 >/dev/ttyACM0");
                 return Convert.ToBoolean(output.Result); //TODO: FIX LATER
             }
-            return false;
+            return Track;
         }
-
-        /*public static string testConnection()
-        {
-            AuthenticationMethod method = new PasswordAuthenticationMethod("a3sec", "A3secwintrack6");
-            ConnectionInfo connection = new ConnectionInfo("10.0.1.2", "a3sec", method);
-            var client = new SshClient(connection);
-            string output = "";
-
-            try
-            {
-                client.Connect();
-            }
-            catch(System.Net.Sockets.SocketException e)
-            {
-                output += "ERROR: " + e.Message;
-            }
-
-            if (client.IsConnected)
-            {
-                output += "\nClient is connected to server";
-                var readCommand = client.RunCommand("echo 2 >/dev/ttyACM0");
-                output += readCommand.Result;
-            }
-            else
-            {
-                output += "\nClient could not connect to server";
-            }
-
-            return output;
-        }*/
     }
 }

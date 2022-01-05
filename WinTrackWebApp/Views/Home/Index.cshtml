@@ -1,26 +1,102 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    bool demoData =  (bool) ViewData["DemoData"];
-    string serverUrl = (string) ViewData["ServerUrl"];
+    bool demoData = (bool)ViewData["DemoData"];
+    string serverUrl = (string)ViewData["ServerUrl"];
+    string trackStatus = (string)ViewData["TrackStatus"];
 }
-<label class="switch">
-    <input id="demoToggle" type="checkbox" @if (demoData) {@Html.Raw("checked")}>
-    <span class="slider round"></span>
-</label>
+
+
+<div class="wintrack-container">
+    <div class="wintrack-container-top">
+        <h5 style="display:block">Maak gebruik van demo data</h5>
+        <label class="switch">
+            <input id="demoToggle" type="checkbox" @if (demoData) { @Html.Raw("checked") }>
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="wintrack-container-bottom">
+        <img class="track" src="/images/@(trackStatus).png"/>
+        <div class="track-button"></div>
+        <div style="display: none;" class="track-window">
+            <h5 class="track-window-top" style="flex-basis: 100%;">Wissel spoor</h5>
+            <div class="track-window-bottom">
+                <div style="display:block">Aansturen wissel</div>
+                <label class="switch">
+                    <input id="trackToggle" type="checkbox" @if (trackStatus.Contains("Right")) { @Html.Raw("checked") }>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{ 
-<script>
+    <script>
     const SwitchData = () => {
         $("#demoToggle").prop("disabled", true);
         $.ajax({
             url: `@serverUrl/home/switchdata`,
             type: "POST"
         }).then(() => {
-            setTimeout(() => { $("#demoToggle").prop("disabled", false); }, 1500);
+            if ($("#demoToggle").prop("checked")) {
+                if ($(".track").attr("src") == "/images/OffLeft.png") { $(".track").attr("src", "/images/OnLeft.png"); }
+                else if ($(".track").attr("src") == "/images/OffRight.png") { $(".track").attr("src", "/images/OnRight.png"); }
+            }
+            else {
+                let trackStatus = "";
+                $.ajax({
+                    url: `@serverUrl/home/getconnection`,
+                    type: "GET"
+                }).then(result1 => {
+                    if (result1) { trackStatus += "On"}
+                    else { trackStatus += "Off" }
+
+                    $.ajax({
+                        url: `@serverUrl/home/gettrackstatus`,
+                        type: "GET"
+                    }).then(result2 => {
+                        if (result2) { trackStatus += "Right" }
+                        else { trackStatus += "Left" }
+                        $(".track").attr("src", "/images/" + trackStatus + ".png");
+                    });
+
+                });
+
+
+            }
+            setTimeout(() => { $("#demoToggle").prop("disabled", false); }, 500);
+            
         });
     }
+
+    const SwitchTrack = () => {
+        $("#trackToggle").prop("disabled", true);
+
+        if ($(".track").attr("src").includes("Off")) {
+            setTimeout(() => {
+                $("#trackToggle").prop("checked", !$("#trackToggle").prop("checked"));
+            }, 100);
+        }
+
+        $.ajax({
+            url: `@serverUrl/home/switchtrack`,
+            type: "POST"
+        }).then(() => {
+            if ($(".track").attr("src") == "/images/OnLeft.png") { $(".track").attr("src", "/images/OnRight.png"); }
+            else if ($(".track").attr("src") == "/images/OnRight.png") { $(".track").attr("src", "/images/OnLeft.png"); }
+            setTimeout(() => { $("#trackToggle").prop("disabled", false); }, 500);
+        });
+    }
+
+    const ToggleTrackWindow = () => {
+        if ($(".track-window:visible").length) { $(".track-window").hide(); }
+        else { $(".track-window").show(); }
+    }
+
     $(document).ready(() => {
         $("#demoToggle").on("click", SwitchData);
+        $(".track-button").on("click", ToggleTrackWindow);
+        $("#trackToggle").on("click", SwitchTrack);
     });
-</script>
+    </script>
 }   

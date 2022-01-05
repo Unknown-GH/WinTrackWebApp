@@ -38,8 +38,16 @@ namespace WinTrackWebApp.Controllers
 
         public IActionResult Index()
         {
+            string trackStatus = "";
+            if (Arduino.GetConnection()) { trackStatus += "On"; }
+            else { trackStatus += "Off"; }
+            if (Arduino.GetTrackStatus()) { trackStatus += "Right"; }
+            else { trackStatus += "Left"; }
+            
+            ViewData["TrackStatus"] = trackStatus;
             ViewData["DemoData"] = Arduino.DemoData;
             ViewData["ServerUrl"] = Startup.ServerUrl;
+            
             return View();
         }
 
@@ -53,6 +61,8 @@ namespace WinTrackWebApp.Controllers
         public IActionResult SwitchTrack()
         {
             Arduino.SwitchTrack();
+            _context.Arduino.Update(Arduino);
+            _context.SaveChanges();
             return StatusCode(200);
         }
 
@@ -65,9 +75,14 @@ namespace WinTrackWebApp.Controllers
             return StatusCode(200);
         }
 
-        public ActionResult<bool> GetStatus()
+        public ActionResult<bool> GetTrackStatus()
         {
-            return Arduino.GetStatus();
+            return Arduino.GetTrackStatus();
+        }
+
+        public ActionResult<bool> GetConnection()
+        {
+            return Arduino.GetConnection();
         }
     }
 }
