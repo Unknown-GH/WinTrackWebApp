@@ -13,6 +13,11 @@ namespace WinTrackWebApp
     {
         public static void Main(string[] args)
         {
+            if (args.Count() > 0)
+            {
+                Startup.ServerUrl = args[0];
+                args = args.Skip(1).ToArray();
+            }
             CreateHostBuilder(args).Build().Run();
         }
 
