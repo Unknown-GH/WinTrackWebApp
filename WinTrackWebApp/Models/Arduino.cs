@@ -19,8 +19,8 @@ namespace WinTrackWebApp.Models
         {
             if (DemoData) return true;
             if (_client == null || !_client.IsConnected) { 
-                AuthenticationMethod method = new PasswordAuthenticationMethod("a3sec", "A3secwintrack6");
-                ConnectionInfo connection = new ConnectionInfo("10.0.1.2", "a3sec", method); //TODO: FIX LATER
+                AuthenticationMethod method = new PasswordAuthenticationMethod("wisselvm", "A3secwintrack6");
+                ConnectionInfo connection = new ConnectionInfo("10.0.1.2", "wisselvm", method);
                 connection.Timeout = TimeSpan.FromSeconds(1);
                 _client = new SshClient(connection);
 
@@ -36,7 +36,7 @@ namespace WinTrackWebApp.Models
                 {
                     return false;
                 }
-                Track = GetTrackStatus();
+                GetTrackStatus();
             }
             return true;
         }
@@ -48,7 +48,7 @@ namespace WinTrackWebApp.Models
             {
                 if (GetConnection())
                 {
-                    _client.RunCommand("echo 2 >/dev/ttyACM0");
+                    _client.RunCommand($"echo {(Track ? "1" : "2" )} >/dev/ttyACM0");
                     Track = !Track;
                 }
             }
@@ -59,8 +59,9 @@ namespace WinTrackWebApp.Models
             if (DemoData) return Track;
             if (GetConnection())
             {
-                var output = _client.RunCommand("echo 3 >/dev/ttyACM0");
-                return Convert.ToBoolean(output.Result); //TODO: FIX LATER
+                var output = _client.RunCommand("cat >/dev/ttyACM0 & echo 3 >/dev/ttyACM0");
+                if (output.Result == "1") Track = true;
+                else if (output.Result == "2") Track = false;
             }
             return Track;
         }
