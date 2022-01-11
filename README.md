@@ -9,8 +9,10 @@ Code voor de webapplicatie en database
 
 ### Stap 1
 De eerste stap is het geven van uitvoer rechten aan de installatie script
+
 `chmod a+x installscript.sh`
 
 ### Stap 2
 De tweede stap is het uitvoeren van de installatiescript, de rest van de installatie is geautomatiseerd.
+
 `./installscript.sh`
