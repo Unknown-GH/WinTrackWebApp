@@ -48,7 +48,7 @@ namespace WinTrackWebApp.Models
             {
                 if (GetConnection())
                 {
-                    _client.RunCommand("echo 2 >/dev/ttyACM0");
+                    _client.RunCommand($"echo {(Track ? "1" : "2" )} >/dev/ttyACM0");
                     Track = !Track;
                 }
             }
