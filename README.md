@@ -17,5 +17,5 @@ De tweede stap is het uitvoeren van de installatiescript, de rest van de install
 
 `./installscript.sh`
 
-### Extra informatie
+## Extra informatie
 Het installatie script werkt daarnaast ook als uitvoer script. Dit betekent dat het script meerdere keren kan uitgevoerd worden, zoals wanneer het is opnieuw opgestart nadat het afgesloten is. Wanneer het script opnieuw aangeroepen word, update het ook naar de laatste versie mochten er aanpassingen zijn gemaakt. 
