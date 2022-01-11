@@ -1,7 +1,7 @@
-#WinTrack Webapplicatie
+# WinTrack Webapplicatie
 Code voor de webapplicatie en database
 
-##Installatie handleiding
+## Installatie handleiding
 
 ### Vereisingen
 * Het is geadviseerd een Ubuntu 20.04 LTS Desktop vmachine te gebruiken als host.
