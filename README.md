@@ -16,3 +16,6 @@ De eerste stap is het geven van uitvoer rechten aan de installatie script
 De tweede stap is het uitvoeren van de installatiescript, de rest van de installatie is geautomatiseerd.
 
 `./installscript.sh`
+
+### Extra informatie
+Het installatie script werkt daarnaast ook als uitvoer script. Dit betekent dat het script meerdere keren kan uitgevoerd worden, zoals wanneer het is opnieuw opgestart nadat het afgesloten is. Wanneer het script opnieuw aangeroepen word, update het ook naar de laatste versie mochten er aanpassingen zijn gemaakt. 
